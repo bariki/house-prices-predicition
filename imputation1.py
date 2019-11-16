@@ -131,13 +131,6 @@ all_data['Exterior2nd'] = all_data['Exterior2nd'].fillna(all_data['Exterior2nd']
 all_data['SaleType'] = all_data['SaleType'].fillna(all_data['SaleType'].mode()[0])
 #************
 
-
-all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
-
-
-xtrain = all_data_dumify[:ntrain]
-xtest = all_data_dumify[ntrain:]
-
 print("X train data")
 print(xtrain)
 
