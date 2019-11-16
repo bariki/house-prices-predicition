@@ -130,13 +130,3 @@ all_data['Exterior2nd'] = all_data['Exterior2nd'].fillna(all_data['Exterior2nd']
 # of the entire dataframe.
 all_data['SaleType'] = all_data['SaleType'].fillna(all_data['SaleType'].mode()[0])
 #************
-
-print("X train data")
-print(xtrain)
-
-print("Y train data")
-print(y_train)
-
-print("test data")
-print(xtest)
-
