@@ -8,6 +8,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split 
 from sklearn.metrics import mean_squared_error
 from math import sqrt
+from pprint import pprint
+from sklearn.model_selection import RandomizedSearchCV
 
 # DATA DUMMIFICATION
 all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
@@ -29,11 +31,149 @@ X = df_train.loc[:, ~df_train.columns.isin(['SalePrice'])] # Remove Specific col
 y = y_train
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-# X_train = xtrain
-# X_test = xtest
-# y_test
-# y_train = 1
 
+# *****************************************************************************************************************************************************************************
+# *****************************************************************************************************************************************************************************
+#random forest
+
+n_estimators = range(1,100)
+#[int(x) for x in np.linspace(start = 1, stop = 100, num = 1)]
+# Number of features to consider at every split
+max_features = ['auto', 'sqrt']
+# Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
+max_depth.append(None)
+# Minimum number of samples required to split a node
+min_samples_split = [2, 5, 10]
+# Minimum number of samples required at each leaf node
+min_samples_leaf = [1, 2, 4]
+# Method of selecting samples for training each tree
+bootstrap = [True, False]
+#cretion
+criterion=['mse']
+# Create the random grid
+random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+               
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap
+               }
+pprint(random_grid)
+
+
+# Use the random grid to search for best hyperparameters
+# First create the base model to tune
+rf = RandomForestRegressor()
+# Random search of parameters, using 3 fold cross validation, 
+# search across 100 different combinations, and use all available cores
+rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# Fit the random search model
+rf_random.fit(xtrain, y_train_final)
+
+#bset params
+rf_random.best_params_
+
+
+rf = RandomForestRegressor(n_estimators = 94,min_samples_split=5,min_samples_leaf=1,max_features='sqrt',
+                           max_depth=70,bootstrap=False)
+
+#fit with best params of the train data
+rf.fit(X_train, y_train)
+
+
+#score with train data
+rf.score(X_train, y_train)
+
+#predict
+y_predicted=rf.predict(X_test)
+
+# fit test data with npredicted
+rf.fit(X_test,y_predicted)
+
+#check score
+rf.score(X_test,y_predicted)
+# #checking error
+# train_error = (1 - train_score)
+# test_error = (1 - train_score)
+# print("The training error is: %.5f" %train_error)
+# print("The test     error is: %.5f" %test_error)
+
+
+
+
+
+
+#lasso model
+
+from sklearn.model_selection import GridSearchCV
+alphas = np.arange(0,10)
+
+grid = GridSearchCV( estimator=Lasso(), param_grid = {'alpha':alphas} )
+grid.fit(X_train, y_train)
+lasso_clf = grid.best_estimator_
+
+#best lambda
+lasso_clf
+
+#set best lambda and fit train data
+
+lasso = Lasso()
+lasso.set_params(alpha = 9.0)
+lasso.fit(X_train, y_train)
+lasso.score(X_train, y_train)
+
+#get cofficient
+
+lasso.coef_
+
+#predicted value from train data
+
+predicted_y1=lasso.predict(xtest)
+
+#score of the predicted data
+
+lasso.score(xtest, predicted_y1)
+
+
+
+
+#ridge model
+
+from sklearn.model_selection import GridSearchCV
+alphas = np.arange(0,10)
+
+grid = GridSearchCV( estimator=Ridge(), param_grid = {'alpha':alphas} )
+grid.fit(X_train, y_train)
+ridge_clf = grid.best_estimator_
+
+#best lambda
+ridge_clf
+
+#set best lambda and fit train data
+
+ridge = Ridge()
+ridge.set_params(alpha = 7.0)
+ridge.fit(X_train, y_train)
+ridge.score(X_train, y_train)
+
+#get cofficient
+
+ridge.coef_
+
+#predicted value from train data
+
+predicted_y1=ridge.predict(xtest)
+
+#score of the predicted data
+
+ridge.score(xtest, predicted_y1)
+
+
+
+# ******************************************************************************************************************************************************************************
+# ******************************************************************************************************************************************************************************
 # model#1 Lasso
 lasso = Lasso(alpha=0.01, max_iter=1000)
 lasso_0_05 = Lasso(alpha=0.05, max_iter=1000)
@@ -115,53 +255,6 @@ from subprocess import check_output
 
 from sklearn.model_selection import GridSearchCV
 
-# rfr = RandomForestRegressor(verbose=2)
-
-# param_grid = {
-#     'n_estimators': [62],
-#     'max_features': ['auto', 'sqrt', 'log2'],
-#     # 'max_depth' : [1,5,10,15,20,25,'auto'],
-#     'criterion' :['mse', 'mae']
-# }
-
-# # param_grid = {
-# #   # 'bootstrap': True,
-# #  'criterion': 'mse',
-# # #  'max_depth': [None],
-# #  'max_features': 'auto',
-# # #  'max_leaf_nodes': None,
-# #  'min_impurity_decrease': 0.0,
-# # #  'min_impurity_split': None,
-# #  'min_samples_leaf': 1,
-# #  'min_samples_split': 2,
-# #  'min_weight_fraction_leaf': 0.0,
-# #  'n_estimators': range(1, 100),
-# #  'n_jobs': 12,
-# #  'oob_score': False,
-# #  'random_state': 42,
-# #  'verbose': 0,
-# #  'warm_start': False
-# #  }
-
-# CV_rfr = GridSearchCV(estimator=rfr, param_grid=param_grid, cv= 5, n_jobs = 10)
-# CV_rfr.fit(X_train, y_train)
-
-# CV_rfr.best_params_
-
-
-# for j in range(1000):
-
-#             X_train, X_test, y_train, y_test = train_test_split(X, y , random_state =j,     test_size=0.35)
-#             lr = LarsCV().fit(X_train, y_train)
-
-#             tr_score.append(lr.score(X_train, y_train))
-#             ts_score.append(lr.score(X_test, y_test))
-
-#         J = ts_score.index(np.max(ts_score))
-
-#         X_train, X_test, y_train, y_test = train_test_split(X, y , random_state =J, test_size=0.35)
-#         M = LarsCV().fit(X_train, y_train)
-#         y_pred = M.predict(X_test)
 
 
 print('Mean Absolute Error:', metrics.mean_absolute_error(y_pred_final, y_pred_rndfrst))  
@@ -173,15 +266,17 @@ y_pred.shape
 y_train.shape
 
 
+y_pred_final = rf.predict(df_test)
+y_pred_final.shape
 
 # Prepare Submission File
 # ensemble = stacked_pred *1
 submit = pd.DataFrame()
 submit['id'] = test_ID
 # submit['SalePrice'] = ensemble
-submit['SalePrice'] = pd.DataFrame(y_pred_rndfrst)
+submit['SalePrice'] = pd.DataFrame(y_pred_final)
 # ----------------------------- Create File to Submit --------------------------------
 # submit.to_csv('SalePrice_N_submission.csv', index = False)
-submit.to_csv('./submission/SalePrice_N_submission5.csv', index = False)
+submit.to_csv('./submission/SalePrice_N_submission7.csv', index = False)
 
 submit.head()
