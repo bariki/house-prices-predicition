@@ -8,6 +8,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
+# DATA DUMMIFICATION
+all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
+
+# SPLITTING DATA
+xtrain = all_data_dumify[:ntrain]
+xtest = all_data_dumify[ntrain:]
+
+xtrain_no_dummify = all_data[:ntrain]
+xtest_no_dummify = all_data[ntrain:]
+
 
 all_data
 df_train = all_data_dumify[:ntrain]
