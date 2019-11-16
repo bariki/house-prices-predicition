@@ -23,7 +23,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # y_test
 # y_train = 1
 
-# Lasso
+# model#1 Lasso
 lasso = Lasso(alpha=0.01, max_iter=1000)
 lasso_0_05 = Lasso(alpha=0.05, max_iter=1000)
 
@@ -154,9 +154,9 @@ from sklearn.model_selection import GridSearchCV
 #         y_pred = M.predict(X_test)
 
 
-# print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred_rndfrst))  
-# print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred_rndfrst))  
-# print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred_rndfrst)))
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_pred_final, y_pred_rndfrst))  
+print('Mean Squared Error:', metrics.mean_squared_error(y_pred_final, y_pred_rndfrst))  
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_pred_final, y_pred_rndfrst)))
 
 y_pred.shape
 
