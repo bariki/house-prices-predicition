@@ -5,6 +5,7 @@ import seaborn as sns
 from scipy import stats
 from scipy.stats import norm, skew #for some statistics
 from sklearn.model_selection import cross_val_score
+import copy
 
 df_train = pd.read_csv("train.csv")
 df_test =  pd.read_csv("test.csv")
@@ -32,6 +33,7 @@ ntrain = df_train.shape[0]
 ntest = df_test.shape[0]
 
 y_train = df_train.SalePrice.values
+y_train_final = copy.deepcopy(y_train)
 
 all_data = pd.concat((df_train, df_test)).reset_index(drop=True)
 
