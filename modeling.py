@@ -1,4 +1,5 @@
-from imputation1 import *
+# from imputation1 import *
+from reduct_and_immute import *
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
@@ -50,8 +51,14 @@ gbm = GradientBoostingRegressor()
 gbm = gbm.fit(np.nan_to_num(X_train),y_train)
 # print(gbm.score(np.nan_to_num(X),y))
 
-modelList = [linearreg, gbm, lasso,lasso_0_05]
-modelSeries = pd.Series(modelList, index=['Linear Regression', 'Gradient Boosting','lasso','lasso_0_05'])
+
+# Random Forest
+rndfrst = RandomForestRegressor(n_estimators = 62,max_features='sqrt', random_state = 0, verbose=2) 
+
+rndfrst.fit(X_train, y_train)
+
+modelList = [linearreg, gbm, lasso,lasso_0_05, rndfrst]
+modelSeries = pd.Series(modelList, index=['Linear Regression', 'Gradient Boosting','lasso','lasso_0_05','rndfrst'])
 
 # fit all the models to the training data
 modelSeries.apply(lambda t:t.fit(X_train, y_train))
@@ -82,14 +89,7 @@ from sklearn.ensemble import RandomForestRegressor
   # create regressor object 
 # rndfrst = RandomForestRegressor(n_estimators = 100, random_state = 0) 
 
-rndfrst = RandomForestRegressor(n_estimators = 62,max_features='sqrt', random_state = 0, verbose=2) 
 
-# 'criterion': 'mae',
-#  'max_depth': 8,
-#  'max_features': 'auto',
-#  'n_estimators': 100
- 
-rndfrst.fit(X_train, y_train)
 rndfrst.score(X_train, y_train)
 
 y_pred_final = rndfrst.predict(df_train)
@@ -182,6 +182,6 @@ submit['id'] = test_ID
 submit['SalePrice'] = pd.DataFrame(y_pred_rndfrst)
 # ----------------------------- Create File to Submit --------------------------------
 # submit.to_csv('SalePrice_N_submission.csv', index = False)
-# submit.to_csv('SalePrice_N_submission4.csv', index = False)
+submit.to_csv('./submission/SalePrice_N_submission5.csv', index = False)
 
 submit.head()
