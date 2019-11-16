@@ -139,20 +139,6 @@ categorical_df = categorical_df.drop(['PoolQC', 'Fence', 'MiscFeature', 'Alley']
 numerical_df = all_data[['OverallQual','YearBuilt','FullBath','GrLivArea','TotalBsmtSF','1stFlrSF', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea']]
 
 # COMBINE NUMERICAL FEATURES and CATEGORICAL DFEATURESF
-result_df = pd.concat([numerical_df, categorical_df], axis=1)
+all_data = pd.concat([numerical_df, categorical_df], axis=1)
 
-all_data_dumify = pd.get_dummies(data=result_df, drop_first=True)
-
-
-xtrain = all_data_dumify[:ntrain]
-xtest = all_data_dumify[ntrain:]
-
-print("X train data")
-print(xtrain)
-
-print("Y train data")
-print(y_train)
-
-print("test data")
-print(xtest)
 
