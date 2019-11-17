@@ -18,6 +18,10 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn import tree
 from sklearn.ensemble import RandomForestRegressor 
 from sklearn.model_selection import GridSearchCV
+import copy
+
+import matplotlib.pyplot as plt  # Matlab-style plotting
+# %matplotlib inline
 
 # DATA DUMMIFICATION
 all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
@@ -25,26 +29,36 @@ all_data_dumify.shape
 # SPLITTING DATA
 xtrain = all_data_dumify[:ntrain]
 xtest = all_data_dumify[ntrain:]
+all_data.shape
 
 xtrain_no_dummify = all_data[:ntrain]
 xtest_no_dummify = all_data[ntrain:]
+xtest_no_dummify.shape
 # xtrain_no_dummify["BldgType"] = lb_make.fit_transform(xtrain_no_dummify["BldgType"])
-xtrain_no_dummify.dtypes
 
+
+# Encode All Categorical Data For Decision TreeRegression
 char_cols = xtrain_no_dummify.dtypes.pipe(lambda x: x[x == 'object']).index
+
+for c in char_cols:
+    xtrain_no_dummify[c] = pd.factorize(xtrain_no_dummify[c])[0]
+
+char_cols = xtest_no_dummify.dtypes.pipe(lambda x: x[x == 'object']).index
 
 # Encode All Categorical Data For Decision TreeRegression
 for c in char_cols:
-    xtrain_no_dummify[c] = pd.factorize(xtrain_no_dummify[c])[0]
-xtrain_no_dummify.dtypes
+    xtest_no_dummify[c] = pd.factorize(xtest_no_dummify[c])[0]
+# xtrain_no_dummify.dtypes
 # xtrain_no_dummify["Electrical"]
+xtest_no_dummify.shape
 
 df_train = all_data_dumify[:ntrain]
 df_test = all_data_dumify[ntest:]
 
 X = df_train.loc[:, ~df_train.columns.isin(['SalePrice'])] # Remove Specific column by name
 
-y = y_train
+y = copy.deepcopy(y_train)
+y_train_final = copy.deepcopy(y_train)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -120,71 +134,42 @@ important_features
 #plot graph of most import feature
 important_features.plot(kind = 'bar')
 
-
-
-
-
 #lasso model
-
 alphas = np.arange(0,10)
-
 grid = GridSearchCV( estimator=Lasso(), param_grid = {'alpha':alphas} )
 grid.fit(X_train, y_train)
 lasso_clf = grid.best_estimator_
-
 #best lambda
 lasso_clf
-
 #set best lambda and fit train data
-
 lasso = Lasso()
 lasso.set_params(alpha = 9.0)
 lasso.fit(X_train, y_train)
 lasso.score(X_train, y_train)
-
 #get cofficient
-
 lasso.coef_
-
 #predicted value from train data
-
 predicted_y1=lasso.predict(xtest)
-
 #score of the predicted data
-
 lasso.score(xtest, predicted_y1)
 
-
-
-
 #ridge model
-
 alphas = np.arange(0,10)
-
 grid = GridSearchCV( estimator=Ridge(), param_grid = {'alpha':alphas} )
 grid.fit(X_train, y_train)
 ridge_clf = grid.best_estimator_
-
 #best lambda
 ridge_clf
-
 #set best lambda and fit train data
-
 ridge = Ridge()
 ridge.set_params(alpha = 7.0)
 ridge.fit(X_train, y_train)
 ridge.score(X_train, y_train)
-
 #get cofficient
-
 ridge.coef_
-
 #predicted value from train data
-
 predicted_y1=ridge.predict(X_test)
-
 #score of the predicted data
-
 ridge.score(X_test, predicted_y1)
 
 
@@ -210,7 +195,7 @@ gbm = gbm.fit(np.nan_to_num(X_train),y_train)
 
 
 # Random Forest
-rndfrst = RandomForestRegressor(n_estimators = 62,max_features='sqrt', random_state = 0, verbose=2) 
+rndfrst = RandomForestRegressor(n_estimators = 62,max_features='sqrt', random_state = 0, verbose=0) 
 
 rndfrst.fit(X_train, y_train)
 
@@ -229,7 +214,7 @@ print(ans)
 
 # Prediction after model selection
 # y_pred.regressor = regressor.predict(X_test)
-print(df_train.isnull().sum())
+(df_train.isnull().sum())
 df_test1 = df_test.loc[:, ~df_test.columns.isin(['SalePrice','id'])] # Remove Specific column by name
 
 y_pred_train = gbm.predict(df_train)
@@ -254,22 +239,21 @@ y_pred_rndfrst = rndfrst.predict(df_test)
 y_pred_rndfrst
 
 # GridSearch
-import re
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import chi2_contingency
+# import re
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# from scipy.stats import chi2_contingency
 
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC
+# from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import cross_val_score
+# from sklearn.model_selection import GridSearchCV
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.metrics import accuracy_score
+# from sklearn.svm import SVC
 
-from subprocess import check_output
-# print(check_output(["ls", "../input"]).decode("utf8"))
+# from subprocess import check_output
 
-from sklearn.model_selection import GridSearchCV
+# from sklearn.model_selection import GridSearchCV
 
 
 print('Mean Absolute Error:', metrics.mean_absolute_error(y_pred_final, y_pred_rndfrst))  
@@ -280,8 +264,7 @@ y_pred.shape
 
 y_train.shape
 
-
-y_pred_final = rf.predict(df_test)
+y_pred_final = rf.predict(xtest_no_dummify)
 y_pred_final.shape
 
 # Prepare Submission File
@@ -292,6 +275,10 @@ submit['id'] = test_ID
 submit['SalePrice'] = pd.DataFrame(y_pred_final)
 # ----------------------------- Create File to Submit --------------------------------
 # submit.to_csv('SalePrice_N_submission.csv', index = False)
-# submit.to_csv('./submission/SalePrice_N_submission9.csv', index = False)
+submit.to_csv('./submission/SalePrice_N_submission10.csv', index = False)
 
 submit.head()
+
+important_features.plot(kind = 'bar')
+plt.show()
+

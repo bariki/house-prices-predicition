@@ -140,3 +140,4 @@ numerical_df = all_data[['OverallQual','YearBuilt','FullBath','GrLivArea','Total
 
 # COMBINE NUMERICAL FEATURES and CATEGORICAL DFEATURESF
 all_data = pd.concat([numerical_df, categorical_df], axis=1)
+# all_data = numerical_df

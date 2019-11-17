@@ -1,7 +1,8 @@
 from modeling import *
 
 y_train.shape
-y_train_final
+y_train_final.shape
+y_pred_final.shape
 
 df_test
 
