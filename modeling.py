@@ -1,15 +1,23 @@
 # from imputation1 import *
+import os, sys
+
+#'/home/user/example/parent/child'
+current_path = os.path.abspath('.')
+
 from reduct_and_immute import *
 from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LinearRegression
-from sklearn import metrics
+from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
+from sklearn import metrics
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split 
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 from pprint import pprint
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn import tree
+from sklearn.ensemble import RandomForestRegressor 
+from sklearn.model_selection import GridSearchCV
 
 # DATA DUMMIFICATION
 all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
@@ -87,11 +95,11 @@ X_no_dummify = xtrain_no_dummify.loc[:, ~xtrain_no_dummify.columns.isin(['SalePr
 X_train_no_dummify, X_test_no_dummify, y_train_no_dummify, y_test_no_dummify = train_test_split(X_no_dummify, y, test_size=0.2, random_state=42)
 
 # xtrain_no_dummify
+rf = RandomForestRegressor()
 rf = RandomForestRegressor(n_estimators = 94,min_samples_split=5,min_samples_leaf=1,max_features='sqrt',max_depth=70,bootstrap=False)
 
 #fit with best params of the train data
 rf.fit(X_train_no_dummify, y_train_no_dummify)
-
 
 #score with train data
 rf.score(X_train_no_dummify, y_train_no_dummify)
@@ -118,7 +126,6 @@ important_features.plot(kind = 'bar')
 
 #lasso model
 
-from sklearn.model_selection import GridSearchCV
 alphas = np.arange(0,10)
 
 grid = GridSearchCV( estimator=Lasso(), param_grid = {'alpha':alphas} )
@@ -152,7 +159,6 @@ lasso.score(xtest, predicted_y1)
 
 #ridge model
 
-from sklearn.model_selection import GridSearchCV
 alphas = np.arange(0,10)
 
 grid = GridSearchCV( estimator=Ridge(), param_grid = {'alpha':alphas} )
@@ -175,11 +181,11 @@ ridge.coef_
 
 #predicted value from train data
 
-predicted_y1=ridge.predict(xtest)
+predicted_y1=ridge.predict(X_test)
 
 #score of the predicted data
 
-ridge.score(xtest, predicted_y1)
+ridge.score(X_test, predicted_y1)
 
 
 
@@ -235,8 +241,7 @@ y_pred
 
 test_ID
 
-from sklearn import tree
-from sklearn.ensemble import RandomForestRegressor 
+
   # create regressor object 
 # rndfrst = RandomForestRegressor(n_estimators = 100, random_state = 0) 
 
@@ -290,5 +295,3 @@ submit['SalePrice'] = pd.DataFrame(y_pred_final)
 # submit.to_csv('./submission/SalePrice_N_submission9.csv', index = False)
 
 submit.head()
-
-important_features.plot(kind = 'bar')
