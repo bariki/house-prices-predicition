@@ -33,12 +33,13 @@ all_data.shape
 
 xtrain_no_dummify = all_data[:ntrain]
 xtest_no_dummify = all_data[ntrain:]
-xtest_no_dummify.shape
+xtest_no_dummify.head()
 # xtrain_no_dummify["BldgType"] = lb_make.fit_transform(xtrain_no_dummify["BldgType"])
 
 
 # Encode All Categorical Data For Decision TreeRegression
 char_cols = xtrain_no_dummify.dtypes.pipe(lambda x: x[x == 'object']).index
+xtest_no_dummify.dtypes
 
 for c in char_cols:
     xtrain_no_dummify[c] = pd.factorize(xtrain_no_dummify[c])[0]
@@ -50,7 +51,8 @@ for c in char_cols:
     xtest_no_dummify[c] = pd.factorize(xtest_no_dummify[c])[0]
 # xtrain_no_dummify.dtypes
 # xtrain_no_dummify["Electrical"]
-xtest_no_dummify.shape
+xtest_no_dummify.dtypes
+xtest_no_dummify.head()
 
 df_train = all_data_dumify[:ntrain]
 df_test = all_data_dumify[ntest:]
