@@ -135,6 +135,7 @@ important_features
 
 #plot graph of most import feature
 important_features.plot(kind = 'bar')
+plt.show()
 
 #lasso model
 alphas = np.arange(0,10)
@@ -209,6 +210,9 @@ modelSeries.apply(lambda t:t.fit(X_train, y_train))
 
 
 # calculate the train/test accuracy
+# ans = modelSeries.apply(lambda t:pd.Series([t.score(X_train, y_train)]))
+
+
 ans = modelSeries.apply(lambda t:pd.Series([t.score(X_train, y_train), t.score(X_test, y_test)]))
 ans.columns = ['train score', 'test score']
 print(ans)
@@ -230,7 +234,7 @@ test_ID
 
 
   # create regressor object 
-# rndfrst = RandomForestRegressor(n_estimators = 100, random_state = 0) 
+# rndfrst = RandomForestRegressor(n_estimators = 100, random_state = 0)
 
 
 rndfrst.score(X_train, y_train)
@@ -281,6 +285,6 @@ submit['SalePrice'] = pd.DataFrame(y_pred_final)
 
 submit.head()
 
-important_features.plot(kind = 'bar')
-plt.show()
+# important_features.plot(kind = 'bar')
+# plt.show()
 

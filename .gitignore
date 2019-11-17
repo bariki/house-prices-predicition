@@ -1,5 +1,6 @@
 .vscode/
-
+.Rhistory
+.Untitled.ipynb
 # DO NOT EDIT THE CODE BELOW --- ENTER YOUR IGNORED FILES BEFORE THIS LINE
 # Byte-compiled / optimized / DLL files
 __pycache__/
