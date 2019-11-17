@@ -132,4 +132,3 @@ dmypy.json
 .pyre/
 
 .gitignore
-.DS_Store
