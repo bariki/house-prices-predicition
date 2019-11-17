@@ -132,13 +132,26 @@ all_data['SaleType'] = all_data['SaleType'].fillna(all_data['SaleType'].mode()[0
 # COLUMN REDUCTIONS
 
 # DROP CATEGORICAL FEATURES
-categorical_df = all_data.select_dtypes(include='O')
-categorical_df = categorical_df.drop(['PoolQC', 'Fence', 'MiscFeature', 'Alley'], axis=1)
+categorical_df = all_data[['ExterQual','KitchenQual','BsmtQual','GarageFinish','FireplaceQu']]
 
 # DROP NUMERICAL FEATURES
 numerical_df = all_data[['OverallQual','YearBuilt','FullBath','GrLivArea','TotalBsmtSF','1stFlrSF', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea']]
 
 # COMBINE NUMERICAL FEATURES and CATEGORICAL DFEATURESF
-all_data = pd.concat([numerical_df, categorical_df], axis=1)
+result_df = pd.concat([numerical_df, categorical_df], axis=1)
 
+all_data_dumify = pd.get_dummies(data=result_df, drop_first=True)
+
+
+xtrain = all_data_dumify[:ntrain]
+xtest = all_data_dumify[ntrain:]
+
+print("X train data")
+print(xtrain)
+
+print("Y train data")
+print(y_train)
+
+print("test data")
+print(xtest)
 
