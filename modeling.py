@@ -277,7 +277,7 @@ submit['id'] = test_ID
 submit['SalePrice'] = pd.DataFrame(y_pred_final)
 # ----------------------------- Create File to Submit --------------------------------
 # submit.to_csv('SalePrice_N_submission.csv', index = False)
-submit.to_csv('./submission/SalePrice_N_submission10.csv', index = False)
+# submit.to_csv('./submission/SalePrice_N_submission10.csv', index = False)
 
 submit.head()
 
