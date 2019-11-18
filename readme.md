@@ -2,6 +2,6 @@
 
 Link to github repository for the group project is https://github.com/bariki/house-prices-predicition ,the repository contains the code used for the machine learning project as well as the powerpoint presentation.
 
-To Run the project model run the file post_modelling.py only, it import two other python files namely <b>reduct_and_immute.py</b> and <b>modeling.py</b> (In that specific order).
+To Run the project model run the file <b>post_modelling.py</b> only, it imports two other python files namely <b>reduct_and_immute.py</b> and <b>modeling.py</b> (In that specific order).
 
 The powerpoint presentation is the file <b>Presentation.pptx</b>
