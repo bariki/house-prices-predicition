@@ -24,6 +24,8 @@ import matplotlib.pyplot as plt  # Matlab-style plotting
 # %matplotlib inline
 
 # DATA DUMMIFICATION
+all_data = result_df
+all_data.shape
 all_data_dumify = pd.get_dummies(data=all_data, drop_first=True)
 all_data_dumify.shape
 # SPLITTING DATA
@@ -68,51 +70,55 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # *****************************************************************************************************************************************************************************
 # #random forest
 
-# n_estimators = range(1,100)
-# #[int(x) for x in np.linspace(start = 1, stop = 100, num = 1)]
-# # Number of features to consider at every split
-# max_features = ['auto', 'sqrt']
-# # Maximum number of levels in tree
-# max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
-# max_depth.append(None)
-# # Minimum number of samples required to split a node
-# min_samples_split = [2, 5, 10]
-# # Minimum number of samples required at each leaf node
-# min_samples_leaf = [1, 2, 4]
-# # Method of selecting samples for training each tree
-# bootstrap = [True, False]
-# #cretion
-# criterion=['mse']
-# # Create the random grid
-# random_grid = {'n_estimators': n_estimators,
-#                'max_features': max_features,
-#                'max_depth': max_depth,
-               
-#                'min_samples_split': min_samples_split,
-#                'min_samples_leaf': min_samples_leaf,
-#                'bootstrap': bootstrap
-#                }
-# pprint(random_grid)
+n_estimators = range(1,100)
+# n_estimators = [1,15,16,17,18,19,20,21]
+
+#[int(x) for x in np.linspace(start = 1, stop = 100, num = 1)]
+# Number of features to consider at every split
+max_features = ['auto', 'sqrt']
+# Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(10, 200, num = 11)]
+max_depth.append(None)
+# Minimum number of samples required to split a node
+min_samples_split = [2, 5, 10]
+# Minimum number of samples required at each leaf node
+min_samples_leaf = [1, 2, 4]
+# Method of selecting samples for training each tree
+bootstrap = [True, False]
+#cretion
+criterion=['mse']
+
+cv=[3,5,7]
+# Create the random grid
+random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+              #  'cv':cv,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap
+               }
+pprint(random_grid)
 
 
-# # Use the random grid to search for best hyperparameters
-# # First create the base model to tune
-# rf = RandomForestRegressor()
-# # Random search of parameters, using 3 fold cross validation, 
-# # search across 100 different combinations, and use all available cores
-# rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
-# # Fit the random search model
-# rf_random.fit(xtrain, y_train_final)
+# Use the random grid to search for best hyperparameters
+# First create the base model to tune
+rf = RandomForestRegressor()
+# Random search of parameters, using 3 fold cross validation, 
+# search across 100 different combinations, and use all available cores
+rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# Fit the random search model
+rf_random.fit(xtrain, y_train_final)
 
-# #bset params
-# rf_random.best_params_
+#bset params
+rf_random.best_params_
 
 X_no_dummify = xtrain_no_dummify.loc[:, ~xtrain_no_dummify.columns.isin(['SalePrice'])]
 X_train_no_dummify, X_test_no_dummify, y_train_no_dummify, y_test_no_dummify = train_test_split(X_no_dummify, y, test_size=0.2, random_state=42)
 
 # xtrain_no_dummify
 rf = RandomForestRegressor()
-rf = RandomForestRegressor(n_estimators = 94,min_samples_split=5,min_samples_leaf=1,max_features='sqrt',max_depth=70,bootstrap=False)
+rf = RandomForestRegressor(n_estimators = 98,min_samples_split=5,min_samples_leaf=1,max_features='sqrt',max_depth=29,bootstrap=False)
 
 #fit with best params of the train data
 rf.fit(X_train_no_dummify, y_train_no_dummify)
@@ -281,7 +287,7 @@ submit['id'] = test_ID
 submit['SalePrice'] = pd.DataFrame(y_pred_final)
 # ----------------------------- Create File to Submit --------------------------------
 # submit.to_csv('SalePrice_N_submission.csv', index = False)
-# submit.to_csv('./submission/SalePrice_N_submission10.csv', index = False)
+submit.to_csv('./submission/SalePrice_N_submission11.csv', index = False)
 
 submit.head()
 
