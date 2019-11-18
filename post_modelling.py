@@ -24,4 +24,10 @@ df1_head.plot(kind='line',figsize=(10,8))
 plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
 plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
 plt.show()
+
+# # Scatter Plot
+df.plot(kind='line',figsize=(10,8))
+plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.show()
 # matplotlib.get_backend()

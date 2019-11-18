@@ -5,6 +5,8 @@ import seaborn as sns
 from scipy import stats
 from scipy.stats import norm, skew #for some statistics
 from sklearn.model_selection import cross_val_score
+from eda.categorical_features_analysis import cat_features
+from eda.numerical_features_analysis import num_features
 
 df_train = pd.read_csv("train.csv")
 df_test =  pd.read_csv("test.csv")
@@ -131,11 +133,13 @@ all_data['SaleType'] = all_data['SaleType'].fillna(all_data['SaleType'].mode()[0
 
 # COLUMN REDUCTIONS
 
-# DROP CATEGORICAL FEATURES
-categorical_df = all_data[['ExterQual','KitchenQual','BsmtQual','GarageFinish','FireplaceQu']]
+# GET CATEGORICAL FEATURES
+#categorical_df = all_data[['ExterQual','KitchenQual','BsmtQual','GarageFinish','FireplaceQu']]
+categorical_df = all_data[cat_features]
 
 # DROP NUMERICAL FEATURES
-numerical_df = all_data[['OverallQual','YearBuilt','FullBath','GrLivArea','TotalBsmtSF','1stFlrSF', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea']]
+#numerical_df = all_data[['OverallQual','YearBuilt','FullBath','GrLivArea','TotalBsmtSF','1stFlrSF', 'TotRmsAbvGrd', 'GarageCars', 'GarageArea']]
+numerical_df = all_data[num_features]
 
 # COMBINE NUMERICAL FEATURES and CATEGORICAL DFEATURESF
 result_df = pd.concat([numerical_df, categorical_df], axis=1)

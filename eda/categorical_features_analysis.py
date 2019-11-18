@@ -44,5 +44,8 @@ res = df_train[['BsmtCond', 'BsmtQual', 'PoolQC' , 'KitchenQual', 'HeatingQC', '
 
 res = res.corr()
 
-# take only with correlation > 0.5
-res[res['SalePrice'] > 0.5].sort_values(by='SalePrice', ascending=False)
+ser = (res.loc['SalePrice']).sort_values(ascending=False).head(10)
+ser = ser[ser > 0.5]
+ser = ser.drop('SalePrice')
+
+cat_features = np.array(ser.index)

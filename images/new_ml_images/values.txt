@@ -1,0 +1,10 @@
+                   train score  test score
+Linear Regression     0.802041    0.830973
+Gradient Boosting     0.935683    0.887927
+lasso                 0.802041    0.830973
+lasso_0_05            0.802041    0.830971
+rndfrst               0.975784    0.869923
+Mean Absolute Error: 74685.54220909541
+Mean Squared Error: 9890321936.463663
+Root Mean Squared Error: 99450.09771972908
+
